@@ -9,34 +9,31 @@ public class EventDispatcherImpl implements EventDispatcher {
     private Map<String, List<EventHandler>> eventHandlers = new HashMap<>();
 
     public Map<String, List<EventHandler>> getEventHandlers() {
-        return eventHandlers;
+        return this.eventHandlers;
     }
 
-    @Override
     public void register(String eventName, EventHandler eventHandler) {
-        eventHandlers.computeIfAbsent(eventName, k -> new ArrayList<>()).add(eventHandler);
+        this.eventHandlers.putIfAbsent(eventName, new ArrayList<>());
+        this.eventHandlers.get(eventName).add(eventHandler);
     }
 
-    @Override
     public void unregister(String eventName, EventHandler eventHandler) {
-        List<EventHandler> handlers = eventHandlers.get(eventName);
+        List<EventHandler> handlers = this.eventHandlers.get(eventName);
         if (handlers != null) {
             handlers.remove(eventHandler);
             if (handlers.isEmpty()) {
-                eventHandlers.remove(eventName);
+                this.eventHandlers.remove(eventName);
             }
         }
     }
 
-    @Override
     public void unregisterAll() {
-        eventHandlers.clear();
+        this.eventHandlers.clear();
     }
 
-    @Override
     public void notify(Event event) {
-        String eventName = event.getClass().getName();
-        List<EventHandler> handlers = eventHandlers.get(eventName);
+        String eventName = event.getClass().getSimpleName();
+        List<EventHandler> handlers = this.eventHandlers.get(eventName);
         if (handlers != null) {
             for (EventHandler handler : handlers) {
                 handler.handle(event);
