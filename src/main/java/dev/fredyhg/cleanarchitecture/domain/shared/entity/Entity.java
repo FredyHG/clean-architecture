@@ -1,8 +1,9 @@
 package dev.fredyhg.cleanarchitecture.domain.shared.entity;
 
-import javax.management.Notification;
+
+import dev.fredyhg.cleanarchitecture.domain.shared.notification.Notification;
 
 public abstract class Entity {
-    private String id;
+    public String id;
     public Notification notification;
 }
